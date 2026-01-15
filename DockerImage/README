@@ -1,0 +1,17 @@
+---
+- vms-test/
+├── Dockerfile
+├── index.html
+└── images/
+    └── server.png
+
+-   docker login -u <USERNAME>
+
+-   docker build -t savaseeratesli/vms-test:TAG .
+
+-   docker run -d -p 7000:80 --name vms-test savaseeratesli/vms-test:TAG
+
+-   docker tag savaseeratesli/vms-test:1.1 savaseeratesli/vms-test:latest
+-   docker push savaseeratesli/vms-test:TAG
+
+---
