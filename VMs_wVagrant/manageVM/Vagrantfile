@@ -1,0 +1,19 @@
+Vagrant.configure("2") do |config|
+
+  # centos/stream10: manage
+  # https://portal.cloud.hashicorp.com/vagrant/discover/centos/stream10
+  config.vm.define "manage" do |manage|
+    manage.vm.box = "centos/stream10"
+	config.vm.box_version = "20260105.0"
+	config.vm.box_download_insecure=true
+	config.vm.boot_timeout
+    manage.vm.network "public_network", bridge: "Realtek PCIe GbE Family Controller"
+	manage.vm.provider "virtualbox" do |vb|
+     vb.memory = "2048"
+	 vb.cpus = 2
+   end
+    manage.vm.provision "shell", path: "setup-manage.sh", privileged: true
+  end
+
+
+end
