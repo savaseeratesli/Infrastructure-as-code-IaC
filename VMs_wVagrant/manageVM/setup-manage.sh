@@ -115,9 +115,14 @@ sudo systemctl daemon-reload
 echo "===================== Servisler Start yapılıyor =========================="
 
 sudo systemctl start iptables-modules.service
-sleep 15
+sleep 10
 sudo systemctl start concourse-compose.service
-sleep 15
+sleep 10
 sudo systemctl start portainer-compose.service
+sleep 10 
+sudo systemctl start rancherui-compose.service
 
 echo "===================== Kurulum tamamlandı =========================="
+echo "SUNUCU IP:8080      --> concourseci"
+echo "SUNUCU IP:9443      --> portainerio"
+echo "SUNUCU IP:8090,8443 --> rancherui"
