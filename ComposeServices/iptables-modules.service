@@ -1,0 +1,13 @@
+[Unit]
+Description=Load iptables kernel modules and configure alternatives
+After=network-pre.target
+Before=network.target
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+ExecStart=/opt/ComposeFiles/concourse/iptables-modules.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
