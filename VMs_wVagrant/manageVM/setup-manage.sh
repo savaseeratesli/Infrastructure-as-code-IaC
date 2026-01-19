@@ -86,4 +86,27 @@ fi
 echo "===================== Docker imajı çalıştırılıyor =========================="
 sudo docker run -d -p 7000:80 --name vms-test savaseeratesli/vms-test:latest
 
+echo "===================== Uygulamalar için Git Reposu çekiliyor =========================="
+
+sudo -i
+git clone https://github.com/savaseeratesli/Infrastructure-as-code-IaC.git
+
+echo "===================== Dosyalar ilgili dizinlere kopyalanıyor =========================="
+
+sudo -i
+cp -r /root/Infrastructure-as-code-IaC/ComposeFiles /opt
+cp -r /root/Infrastructure-as-code-IaC/ComposeServices/*.service /etc/systemd/system/
+
+echo "===================== Servisler Enable yapılıyor =========================="
+
+systemctl enable concourse-compose.service
+systemctl enable nginx-compose.service
+systemctl enable portainer-compose.service
+systemctl enable prometheus-compose.service
+systemctl enable rancherui-compose.service
+systemctl enable semaphore-compose.service
+systemctl enable sonarqube-compose.service
+
+systemctl daemon-reload
+
 echo "===================== Kurulum tamamlandı =========================="
