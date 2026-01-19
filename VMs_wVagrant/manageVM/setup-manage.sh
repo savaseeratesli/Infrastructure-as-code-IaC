@@ -117,6 +117,7 @@ echo "===================== Servisler Start yapılıyor ========================
 sudo systemctl start iptables-modules.service
 sleep 15
 sudo systemctl start concourse-compose.service
+sleep 15
 sudo systemctl start portainer-compose.service
 
 echo "===================== Kurulum tamamlandı =========================="
