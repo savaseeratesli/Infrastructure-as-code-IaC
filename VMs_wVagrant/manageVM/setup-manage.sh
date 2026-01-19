@@ -94,19 +94,19 @@ git clone https://github.com/savaseeratesli/Infrastructure-as-code-IaC.git
 echo "===================== Dosyalar ilgili dizinlere kopyalanıyor =========================="
 
 sudo -i
-cp -r /root/Infrastructure-as-code-IaC/ComposeFiles /opt
-cp -r /root/Infrastructure-as-code-IaC/ComposeServices/*.service /etc/systemd/system/
+sudo cp -r /root/Infrastructure-as-code-IaC/ComposeFiles /opt
+sudo cp -r /root/Infrastructure-as-code-IaC/ComposeServices/*.service /etc/systemd/system/
 
 echo "===================== Servisler Enable yapılıyor =========================="
 
-systemctl enable concourse-compose.service
-systemctl enable nginx-compose.service
-systemctl enable portainer-compose.service
-systemctl enable prometheus-compose.service
-systemctl enable rancherui-compose.service
-systemctl enable semaphore-compose.service
-systemctl enable sonarqube-compose.service
+sudo systemctl enable concourse-compose.service
+sudo systemctl enable nginx-compose.service
+sudo systemctl enable portainer-compose.service
+sudo systemctl enable prometheus-compose.service
+sudo systemctl enable rancherui-compose.service
+sudo systemctl enable semaphore-compose.service
+sudo systemctl enable sonarqube-compose.service
 
-systemctl daemon-reload
+sudo systemctl daemon-reload
 
 echo "===================== Kurulum tamamlandı =========================="
