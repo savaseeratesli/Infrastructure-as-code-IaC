@@ -97,6 +97,8 @@ sudo -i
 sudo cp -r /root/Infrastructure-as-code-IaC/ComposeFiles /opt
 sudo cp -r /root/Infrastructure-as-code-IaC/ComposeServices/*.service /etc/systemd/system/
 
+sudo chmod +x /opt/ComposeFiles/concourse/iptables-modules.sh
+
 echo "===================== Servisler Enable yapılıyor =========================="
 
 sudo systemctl enable concourse-compose.service
@@ -106,7 +108,11 @@ sudo systemctl enable prometheus-compose.service
 sudo systemctl enable rancherui-compose.service
 sudo systemctl enable semaphore-compose.service
 sudo systemctl enable sonarqube-compose.service
+sudo systemctl enable iptables-modules.service
 
 sudo systemctl daemon-reload
+
+sudo systemctl start iptables-modules.service
+
 
 echo "===================== Kurulum tamamlandı =========================="
