@@ -112,7 +112,11 @@ sudo systemctl enable iptables-modules.service
 
 sudo systemctl daemon-reload
 
-sudo systemctl start iptables-modules.service
+echo "===================== Servisler Start yapılıyor =========================="
 
+sudo systemctl start iptables-modules.service
+sleep 15
+sudo systemctl start concourse-compose.service
+sudo systemctl start portainer-compose.service
 
 echo "===================== Kurulum tamamlandı =========================="
