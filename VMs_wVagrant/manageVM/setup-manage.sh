@@ -31,7 +31,13 @@ sudo dnf install -y \
   nmap \
   openssh-server \
   openssl \
-  git 
+  git \
+  cloud-utils-growpart
+  
+echo "===================== / filesystem Büyütülüyor =========================="
+
+sudo growpart /dev/sda 2
+sudo resize2fs /dev/sda2
   
 echo "===================== Docker CE repo ekleniyor =========================="
 sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -83,8 +89,9 @@ if ! grep -q "/usr/local/bin" /root/.bashrc; then
   echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
 fi
 
-echo "===================== Docker imajı çalıştırılıyor =========================="
-sudo docker run -d -p 7000:80 --name vms-test savaseeratesli/vms-test:latest
+#echo "===================== Docker imajı çalıştırılıyor =========================="
+#sudo docker run -d -p 7000:80 --name vms-test savaseeratesli/vms-test:latest
+
 echo "===================== Uygulamalar için Git Reposu çekiliyor =========================="
 cd /root
 git clone https://github.com/savaseeratesli/Infrastructure-as-code-IaC.git
@@ -115,14 +122,22 @@ sudo systemctl daemon-reload
 echo "===================== Servisler Start yapılıyor =========================="
 
 sudo systemctl start iptables-modules.service
-sleep 10
+sleep 5
+echo "iptables-modules.service OK"
 sudo systemctl start concourse-compose.service
-sleep 10
+sleep 5
+echo "concourse-compose.service OK"
 sudo systemctl start portainer-compose.service
-sleep 10 
-sudo systemctl start rancherui-compose.service
+sleep 5
+#echo "portainer-compose.service OK" 
+#sudo systemctl start rancherui-compose.service
+#sleep 5
+echo "rancherui-compose.service OK" 
 
 echo "===================== Kurulum tamamlandı =========================="
-echo "SUNUCU IP:8080      --> concourseci"
-echo "SUNUCU IP:9443      --> portainerio"
-echo "SUNUCU IP:8090,8443 --> rancherui"
+
+SERVER_IP=$(ip -4 addr show eth1 | awk '/inet /{print $2}' | cut -d/ -f1)
+
+echo "${SERVER_IP}:8080 --> concourseci"
+echo "${SERVER_IP}:8443 --> rancherui"
+#echo "${SERVER_IP}:9443 --> portainerio"
