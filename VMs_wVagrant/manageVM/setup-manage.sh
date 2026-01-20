@@ -104,7 +104,7 @@ sudo cp -r /root/Infrastructure-as-code-IaC/ComposeFiles /opt
 sudo cp -r /root/Infrastructure-as-code-IaC/ComposeServices/*.service /etc/systemd/system/
 echo "Copied"
 sudo chmod +x /opt/ComposeFiles/concourse/iptables-modules.sh
-echo "Authorized x"
+echo "Authorized +x"
 
 echo "===================== Servisler Enable yapılıyor =========================="
 
@@ -127,11 +127,11 @@ echo "iptables-modules.service OK"
 sudo systemctl start concourse-compose.service
 sleep 5
 echo "concourse-compose.service OK"
-sudo systemctl start portainer-compose.service
-sleep 5
-#echo "portainer-compose.service OK" 
-#sudo systemctl start rancherui-compose.service
+#sudo systemctl start portainer-compose.service
 #sleep 5
+#echo "portainer-compose.service OK" 
+sudo systemctl start rancherui-compose.service
+sleep 5
 echo "rancherui-compose.service OK" 
 
 echo "===================== Kurulum tamamlandı =========================="
