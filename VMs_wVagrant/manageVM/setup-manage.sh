@@ -85,19 +85,19 @@ fi
 
 echo "===================== Docker imajı çalıştırılıyor =========================="
 sudo docker run -d -p 7000:80 --name vms-test savaseeratesli/vms-test:latest
-
 echo "===================== Uygulamalar için Git Reposu çekiliyor =========================="
-
-sudo -i
+cd /root
 git clone https://github.com/savaseeratesli/Infrastructure-as-code-IaC.git
+sleep 5
+echo "Downloaded"
 
 echo "===================== Dosyalar ilgili dizinlere kopyalanıyor =========================="
 
-sudo -i
 sudo cp -r /root/Infrastructure-as-code-IaC/ComposeFiles /opt
 sudo cp -r /root/Infrastructure-as-code-IaC/ComposeServices/*.service /etc/systemd/system/
-
+echo "Copied"
 sudo chmod +x /opt/ComposeFiles/concourse/iptables-modules.sh
+echo "Authorized x"
 
 echo "===================== Servisler Enable yapılıyor =========================="
 
