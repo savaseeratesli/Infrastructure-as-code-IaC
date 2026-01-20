@@ -6,12 +6,13 @@ Vagrant.configure("2") do |config|
     manage.vm.box = "centos/stream10"
 	config.vm.box_version = "20260105.0"
 	config.vm.box_download_insecure=true
-	manage.vm.disk :disk, size: "20GB", primary: true #Rancherui çalıştırılacaksa 20GB olmalı.
+	  manage.vm.disk :disk, size: "20GB", primary: true #Rancherui çalıştırılacaksa 20GB olmalı.
 	config.vm.boot_timeout
     manage.vm.network "public_network", bridge: "Realtek PCIe GbE Family Controller"
-	manage.vm.provider "virtualbox" do |vb|
+	  manage.vm.provider "virtualbox" do |vb|
      vb.memory = "3048" #Rancherui çalıştırılacaksa 4048 olmalı.
-	 vb.cpus = 3 #Rancherui çalıştırılacaksa 3 olmalı.
+	   vb.cpus = 3 #Rancherui çalıştırılacaksa 3 olmalı.
+     vb.customize ["modifyvm", :id, "--audio", "none"]
    end
     manage.vm.provision "shell", path: "setup-manage.sh", privileged: true
   end
