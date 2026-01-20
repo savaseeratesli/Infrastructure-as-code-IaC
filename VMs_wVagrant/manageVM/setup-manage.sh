@@ -138,6 +138,6 @@ echo "===================== Kurulum tamamlandı =========================="
 
 SERVER_IP=$(ip -4 addr show eth1 | awk '/inet /{print $2}' | cut -d/ -f1)
 
-echo "${SERVER_IP}:8080 --> concourseci"
-echo "${SERVER_IP}:8443 --> rancherui"
-#echo "${SERVER_IP}:9443 --> portainerio"
+echo "http://${SERVER_IP}:8080/ --> concourseci"
+echo "https://${SERVER_IP}:8443/ --> rancherui"
+#echo "https://${SERVER_IP}:9443/ --> portainerio"
