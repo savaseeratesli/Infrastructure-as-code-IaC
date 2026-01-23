@@ -1,1 +1,53 @@
 
+Vagrant.configure("2") do |config|
+
+  # İlk makine: k3smaster
+  config.vm.define "k3smaster" do |k3smaster|
+    k3smaster.vm.box = "centos/stream10"
+	k3smaster.vm.box_version = "20260105.0"
+    k3smaster.vm.box_download_insecure = true
+	
+	# Disk (Rancher UI için 20GB önerilir)
+    k3smaster.vm.disk :disk, size: "10GB", primary: true
+
+    # Sabit IP ile Public Network
+    k3smaster.vm.network "public_network", ip: "192.168.68.50", bridge: "Realtek PCIe GbE Family Controller", auto_config: true
+
+    # Port çakışmalarını önlemek için auto_correct
+    k3smaster.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", auto_correct: true
+
+    k3smaster.vm.provider "virtualbox" do |vb|
+      vb.memory = "4000"
+      vb.cpus = 2
+	  vb.customize ["modifyvm", :id, "--audio", "none"]
+    end
+
+    k3smaster.vm.provision "shell", path: "mastersh.sh", privileged: true
+  end
+
+  # İkinci makine: k3sworker
+  config.vm.define "k3sworker" do |k3sworker|
+    k3sworker.vm.box = "centos/stream10"
+	k3sworker.vm.box_version = "20260105.0"
+    k3sworker.vm.box_download_insecure = true
+	
+	# Disk (Rancher UI için 20GB önerilir)
+    k3sworker.vm.disk :disk, size: "10GB", primary: true
+
+    # Sabit IP ile Public Network
+    k3sworker.vm.network "public_network", ip: "192.168.68.51", bridge: "Realtek PCIe GbE Family Controller", auto_config: true
+
+    # Port çakışmalarını önlemek için auto_correct
+    k3sworker.vm.network "forwarded_port", guest: 22, host: 2223, id: "ssh", auto_correct: true
+
+    k3sworker.vm.provider "virtualbox" do |vb|
+      vb.memory = "3000"
+      vb.cpus = 2
+	  vb.customize ["modifyvm", :id, "--audio", "none"]
+    end
+
+    k3sworker.vm.provision "shell", path: "workersh.sh", privileged: true
+  end
+
+
+end
