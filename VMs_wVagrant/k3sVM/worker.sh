@@ -6,6 +6,7 @@ MASTER_IP="192.168.68.50"
 WORKER_IP="192.168.68.51"
 HOSTNAME_MASTER="master1"
 HOSTNAME_WORKER="worker1"
+K3S_TOKEN="K10d2f68f8a149ee1fb207fb89cadda64b243dbeb6146b8fc4205a20022e1774d3b::server:b769cbcd847e2341432b5cc3a9473d1c"
 
 echo "===================== Sistem güncelleniyor =========================="
 sudo dnf -y update
@@ -69,26 +70,12 @@ sudo dnf install -y \
   openssl \
   net-tools \
   nmap     
-
-while true; do
-  echo "===================== K3S TOKEN Giriniz =========================="
-  read -s -p "K3S TOKEN giriniz: " K3S_TOKEN
-  echo
-
-  if [[ -n "$K3S_TOKEN" ]]; then
-    echo "✅ K3S TOKEN alındı, kuruluma devam ediliyor..."
-    break
-  else
-    echo "❌ K3S TOKEN boş girildi! Lütfen tekrar deneyin."
-  fi
-done
-
   
 echo "===================== K3S kurulumu =========================="
 
 sudo -i 
 
-curl -sfL https://get.k3s.io | K3S_URL=https://${MASTER_IP}:6443 K3S_TOKEN=${K3S_TOKEN} sh -s - agent --node-ip=${WORKER_IP}
+curl -sfL https://get.k3s.io | K3S_URL=https://${MASTER_IP}:6443 K3S_TOKEN=${K3S_TOKEN} sh -s - agent --node-ip=${WORKER_IP} --node-label node-role.kubernetes.io/worker=
 
 echo "K3s node durumu kontrol ediliyor..."
 sleep 30
