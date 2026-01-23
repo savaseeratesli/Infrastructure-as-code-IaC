@@ -68,19 +68,21 @@ sudo dnf install -y \
   openssh-server \
   openssl \
   net-tools \
-  htop \
-  nmap \
-  fail2ban   
+  nmap     
 
-echo "===================== K3S TOKEN Giriniz ==========================" 
-  
-read -s -p "K3S TOKEN giriniz: " K3S_TOKEN
-echo
+while true; do
+  echo "===================== K3S TOKEN Giriniz =========================="
+  read -s -p "K3S TOKEN giriniz: " K3S_TOKEN
+  echo
 
-if [[ -z "$K3S_TOKEN" ]]; then
-  echo "❌ K3S_TOKEN boş olamaz! Script durduruluyor."
-  exit 1
-fi
+  if [[ -n "$K3S_TOKEN" ]]; then
+    echo "✅ K3S TOKEN alındı, kuruluma devam ediliyor..."
+    break
+  else
+    echo "❌ K3S TOKEN boş girildi! Lütfen tekrar deneyin."
+  fi
+done
+
   
 echo "===================== K3S kurulumu =========================="
 
