@@ -10,16 +10,16 @@ export WORKER_IP="192.168.68.51"
 export NODE_NAME="k3s-master1"
 export HOSTNAME_MASTER="master1"
 export HOSTNAME_WORKER="worker1"
+export MANAGE_IP="192.168.68.49"
+export HOSTNAME_MANAGE="manage"
 
 echo ${MASTER_IP}
-
 echo ${WORKER_IP}
-
 echo ${NODE_NAME}  
-
 echo ${HOSTNAME_MASTER}
-
 echo ${HOSTNAME_WORKER}
+echo ${MANAGE_IP}
+echo ${HOSTNAME_MANAGE}
 
 
 echo "===================== Sistem güncelleniyor =========================="
@@ -48,6 +48,7 @@ echo "===================== Hosts ekleniyor =========================="
 
 echo "${MASTER_IP} ${HOSTNAME_MASTER}" | sudo tee -a /etc/hosts
 echo "${WORKER_IP} ${HOSTNAME_WORKER}" | sudo tee -a /etc/hosts
+echo "${MANAGE_IP} ${HOSTNAME_MANAGE}" | sudo tee -a /etc/hosts
 
 echo "===================== Gerekli kernel modülleri yükleniyor =========================="
 
