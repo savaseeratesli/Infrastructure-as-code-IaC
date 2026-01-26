@@ -1,6 +1,31 @@
 #!/bin/bash
 
-set -e
+sudo su
+sudo -i
+
+echo "===================== Değişken tanımları yapılıyor =========================="
+
+export MASTER_IP="192.168.68.50"
+export WORKER_IP="192.168.68.51"
+export NODE_NAME="k3s-master1"
+export HOSTNAME_MASTER="master1"
+export HOSTNAME_WORKER="worker1"
+export MANAGE_IP="192.168.68.49"
+export HOSTNAME_MANAGE="manage"
+
+echo ${MASTER_IP}
+echo ${WORKER_IP}
+echo ${NODE_NAME}  
+echo ${HOSTNAME_MASTER}
+echo ${HOSTNAME_WORKER}
+echo ${MANAGE_IP}
+echo ${HOSTNAME_MANAGE}
+
+echo "===================== Hosts ekleniyor =========================="
+
+echo "${MASTER_IP} ${HOSTNAME_MASTER}" | sudo tee -a /etc/hosts
+echo "${WORKER_IP} ${HOSTNAME_WORKER}" | sudo tee -a /etc/hosts
+echo "${MANAGE_IP} ${HOSTNAME_MANAGE}" | sudo tee -a /etc/hosts
 
 echo "===================== Sistem güncelleniyor =========================="
 sudo dnf -y update
@@ -15,10 +40,15 @@ sudo -i systemctl enable --now sshd
 sudo -i systemctl restart sshd
 
 echo "===================== Hostname ayarlanıyor =========================="
-sudo hostnamectl set-hostname test
+sudo hostnamectl set-hostname ${HOSTNAME_MANAGE}
 
 echo "===================== Kurulum dizini ayarlanıyor =========================="
 sudo -i export PATH=$PATH:/usr/local/bin
+
+# Root PATH fix 
+if ! grep -q "/usr/local/bin" /root/.bashrc; then
+  echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
+fi
 
 echo "===================== Temel paketler kuruluyor =========================="
 
@@ -57,37 +87,47 @@ sudo dnf install -y epel-release
 sudo dnf makecache
 sudo dnf install -y ansible-core
 
+echo "===================== Gerekli kernel modülleri yükleniyor =========================="
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+sudo modprobe ip_tables
+sudo modprobe iptable_filter
+sudo modprobe iptable_nat
+
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sudo sysctl --system
+
 echo "===================== K3S kurulumu =========================="
 
-sudo -i 
-
-if ! command -v k3s &> /dev/null; then
-  curl -sfL https://get.k3s.io | sh -
-fi
+curl -sfL https://get.k3s.io | sh -s - server --node-ip=${MANAGE_IP} --bind-address=${MANAGE_IP} --advertise-address=${MANAGE_IP} --node-label role=manage
 
 echo "K3s node durumu kontrol ediliyor..."
 sleep 30
 
-# Root için kubectl kubeconfig ayarı
-echo "Root için kubectl yapılandırılıyor..."
-
-mkdir -p /root/.kube
-cp /etc/rancher/k3s/k3s.yaml /root/.kube/config
-chown root:root /root/.kube/config
-
 
 echo "===================== Helm kurulumu =========================="
 
-sudo -i 
+#sudo -i 
 
 curl -fsSL https://get.helm.sh/helm-v4.0.4-linux-amd64.tar.gz | sudo tar -xz
-sudo mv linux-amd64/helm /usr/local/bin/helm
+sudo mv ./linux-amd64/helm /usr/local/bin/helm
 sudo chmod +x /usr/local/bin/helm
 
-# Root PATH fix 
-if ! grep -q "/usr/local/bin" /root/.bashrc; then
-  echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
-fi
+## Root PATH fix 
+#if ! grep -q "/usr/local/bin" /root/.bashrc; then
+#  echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
+#fi
 
 #echo "===================== Docker imajı çalıştırılıyor =========================="
 #sudo docker run -d -p 7000:80 --name vms-test savaseeratesli/vms-test:latest
@@ -115,24 +155,39 @@ sudo systemctl enable prometheus-compose.service
 sudo systemctl enable rancherui-compose.service
 sudo systemctl enable semaphore-compose.service
 sudo systemctl enable sonarqube-compose.service
-sudo systemctl enable iptables-modules.service
+#sudo systemctl enable iptables-modules.service
 
 sudo systemctl daemon-reload
 
 echo "===================== Servisler Start yapılıyor =========================="
 
-sudo systemctl start iptables-modules.service
-sleep 5
-echo "iptables-modules.service OK"
+#sudo systemctl start iptables-modules.service
+#sleep 5
+#echo "iptables-modules.service OK"
 sudo systemctl start concourse-compose.service
 sleep 5
 echo "concourse-compose.service OK"
 #sudo systemctl start portainer-compose.service
 #sleep 5
 #echo "portainer-compose.service OK" 
-sudo systemctl start rancherui-compose.service
-sleep 5
-echo "rancherui-compose.service OK" 
+#sudo systemctl start rancherui-compose.service
+#sleep 5
+#echo "rancherui-compose.service OK" 
+
+echo "===================== Concourse FLY Kuruluyor =========================="
+
+curl 'http://localhost:8080/api/v1/cli?arch=amd64&platform=linux' -o fly
+sudo chmod +x ./fly
+sudo mv ./fly /usr/local/bin/
+
+## Root PATH fix 
+#if ! grep -q "/usr/local/bin" /root/.bashrc; then
+#  echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
+#fi
+
+echo "===================== FLY Login =========================="
+
+/usr/local/bin/fly -t tutorial login -c http://localhost:8080 -u test -p test
 
 echo "===================== Kurulum tamamlandı =========================="
 
