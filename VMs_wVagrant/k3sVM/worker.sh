@@ -1,12 +1,26 @@
 #!/bin/bash
 
-set -e
+sudo su
+sudo -i
 
-MASTER_IP="192.168.68.50"
-WORKER_IP="192.168.68.51"
-HOSTNAME_MASTER="master1"
-HOSTNAME_WORKER="worker1"
-K3S_TOKEN="K10d2f68f8a149ee1fb207fb89cadda64b243dbeb6146b8fc4205a20022e1774d3b::server:b769cbcd847e2341432b5cc3a9473d1c"
+echo "===================== Değişken tanımları yapılıyor =========================="
+
+export MASTER_IP="192.168.68.50"
+export WORKER_IP="192.168.68.51"
+export NODE_NAME="k3s-master1"
+export HOSTNAME_MASTER="master1"
+export HOSTNAME_WORKER="worker1"
+
+echo ${MASTER_IP}
+
+echo ${WORKER_IP}
+
+echo ${NODE_NAME}  
+
+echo ${HOSTNAME_MASTER}
+
+echo ${HOSTNAME_WORKER}
+
 
 echo "===================== Sistem güncelleniyor =========================="
 sudo dnf -y update
@@ -69,17 +83,29 @@ sudo dnf install -y \
   openssh-server \
   openssl \
   net-tools \
-  nmap     
-  
+  nmap \
+  epel-release \
+  sshpass \
+  git
+
+echo "===================== K3S token kopyalanıyor =========================="
+
+sudo sshpass -p 'vagrant' ssh \
+  -o StrictHostKeyChecking=no \
+  vagrant@192.168.68.50 \
+  "sudo cat /var/lib/rancher/k3s/server/token" \
+  > /home/vagrant/node-token
+
+export TOKEN=$(tr -d '\n' < /home/vagrant/node-token)
+
+echo ${TOKEN}
+
 echo "===================== K3S kurulumu =========================="
 
-sudo -i 
-
-curl -sfL https://get.k3s.io | K3S_URL=https://${MASTER_IP}:6443 K3S_TOKEN=${K3S_TOKEN} sh -s - agent --node-ip=${WORKER_IP} --node-label node-role.kubernetes.io/worker=
+curl -sfL https://get.k3s.io | K3S_URL=https://${MASTER_IP}:6443 K3S_TOKEN=${TOKEN} sh -s - agent --node-ip=${WORKER_IP}
 
 echo "K3s node durumu kontrol ediliyor..."
 sleep 30
-
 
 echo "===================== Helm kurulumu =========================="
 

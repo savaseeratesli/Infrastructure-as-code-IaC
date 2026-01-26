@@ -3,11 +3,24 @@
 sudo su
 sudo -i
 
-MASTER_IP="192.168.68.50"
-WORKER_IP="192.168.68.51"
-NODE_NAME="k3s-master1"
-HOSTNAME_MASTER="master1"
-HOSTNAME_WORKER="worker1"
+echo "===================== Değişken tanımları yapılıyor =========================="
+
+export MASTER_IP="192.168.68.50"
+export WORKER_IP="192.168.68.51"
+export NODE_NAME="k3s-master1"
+export HOSTNAME_MASTER="master1"
+export HOSTNAME_WORKER="worker1"
+
+echo ${MASTER_IP}
+
+echo ${WORKER_IP}
+
+echo ${NODE_NAME}  
+
+echo ${HOSTNAME_MASTER}
+
+echo ${HOSTNAME_WORKER}
+
 
 echo "===================== Sistem güncelleniyor =========================="
 sudo dnf -y update
@@ -71,7 +84,8 @@ sudo dnf install -y \
   net-tools \
   htop \
   nmap \
-  fail2ban   
+  fail2ban \
+  git
   
 echo "===================== K3S kurulumu =========================="
 
@@ -97,6 +111,8 @@ if ! grep -q "/usr/local/bin" /root/.bashrc; then
 fi
 
 echo "===================== Master Token =========================="
-cat /var/lib/rancher/k3s/server/node-token
+
+export TOKEN=$(tr -d '\n' < /var/lib/rancher/k3s/server/token)
+echo ${TOKEN}
 
 echo "===================== Master Node Kurulumu Tamamlandı =========================="
