@@ -102,7 +102,7 @@ echo ${TOKEN}
 
 echo "===================== K3S kurulumu =========================="
 
-curl -sfL https://get.k3s.io | K3S_URL=https://${MASTER_IP}:6443 K3S_TOKEN=${TOKEN} sh -s - agent --node-ip=${WORKER_IP}
+curl -sfL https://get.k3s.io | K3S_URL=https://${MASTER_IP}:6443 K3S_TOKEN=${TOKEN} sh -s - agent --node-ip=${WORKER_IP} --node-label role=worker
 
 echo "K3s node durumu kontrol ediliyor..."
 sleep 30

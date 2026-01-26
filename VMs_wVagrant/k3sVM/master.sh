@@ -89,9 +89,7 @@ sudo dnf install -y \
   
 echo "===================== K3S kurulumu =========================="
 
-sudo -i 
-
-curl -sfL https://get.k3s.io | sh -s - server --node-ip=${MASTER_IP} --bind-address=${MASTER_IP} --advertise-address=${MASTER_IP}
+curl -sfL https://get.k3s.io | sh -s - server --node-ip=${MASTER_IP} --bind-address=${MASTER_IP} --advertise-address=${MASTER_IP} --node-label role=master
 
 echo "K3s node durumu kontrol ediliyor..."
 sleep 30
