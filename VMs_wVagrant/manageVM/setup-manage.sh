@@ -195,5 +195,8 @@ SERVER_IP=$(ip -4 addr show eth1 | awk '/inet /{print $2}' | cut -d/ -f1)
 
 echo "http://${SERVER_IP}:8080/ --> concourseci"
 echo "https://${SERVER_IP}:8443/ --> rancherui"
+
+sleep 30
+
 sudo docker logs rancher 2>&1 | awk -F 'Bootstrap Password: ' '/Bootstrap Password:/ {print "Bootstrap Password:" $2}'
 #echo "https://${SERVER_IP}:9443/ --> portainerio"
