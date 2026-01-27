@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
     # Provider
     manage.vm.provider "virtualbox" do |vb|
 	    vb.name = "manage"
-      vb.memory = 3048   # Rancher UI için 4048 önerilir
+      vb.memory = 4048   # Rancher UI için 4048 önerilir
       vb.cpus  = 3
       vb.customize ["modifyvm", :id, "--audio", "none"]
     end
