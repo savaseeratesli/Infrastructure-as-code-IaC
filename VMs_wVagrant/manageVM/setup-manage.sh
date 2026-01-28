@@ -189,14 +189,30 @@ echo "===================== FLY Login =========================="
 
 #/usr/local/bin/fly -t tutorial login -c http://localhost:8080 -u test -p test
 
-echo "===================== Kurulum tamamlandı =========================="
+echo "===================== Uygulamaların Çalışması Bekleniyor =========================="
 
 SERVER_IP=$(ip -4 addr show eth1 | awk '/inet /{print $2}' | cut -d/ -f1)
 
 #echo "http://${SERVER_IP}:8080/ --> concourseci"
-echo "https://${SERVER_IP}:8443/ --> rancherui"
-
-sleep 30
-
-sudo docker logs rancher 2>&1 | awk -F 'Bootstrap Password: ' '/Bootstrap Password:/ {print "Bootstrap Password:" $2}'
+#echo "==============================================="
 #echo "https://${SERVER_IP}:9443/ --> portainerio"
+#echo "==============================================="
+
+echo "Rancher ayağa kalkması bekleniyor: https://${SERVER_IP}:8443/ "
+
+while true; do
+  STATUS_CODE=$(curl -k -s -o /dev/null -w "%{http_code}" "https://${SERVER_IP}:8443/")
+
+  if [ "$STATUS_CODE" -eq 200 ]; then
+    echo "Rancher hazır (HTTP 200)"
+
+    sudo docker logs rancher 2>&1 | \
+      awk -F 'Bootstrap Password: ' '/Bootstrap Password:/ {print "Bootstrap Password: " $2}'
+
+    break
+  else
+    echo "Henüz hazır değil (HTTP $STATUS_CODE). Tekrar denenecek..."
+    sleep 10
+  fi
+done
+echo "===================== Kurulum tamamlandı =========================="
