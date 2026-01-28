@@ -86,6 +86,7 @@ sudo dnf install -y \
   htop \
   nmap \
   fail2ban \
+  openssl \
   git
   
 echo "===================== K3S kurulumu =========================="

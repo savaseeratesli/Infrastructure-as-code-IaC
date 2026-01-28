@@ -87,6 +87,7 @@ sudo dnf install -y \
   nmap \
   epel-release \
   sshpass \
+  openssl \
   git
 
 echo "===================== K3S token kopyalanıyor =========================="
