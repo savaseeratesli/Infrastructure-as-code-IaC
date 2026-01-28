@@ -164,9 +164,9 @@ echo "===================== Servisler Start yapılıyor ========================
 #sudo systemctl start iptables-modules.service
 #sleep 5
 #echo "iptables-modules.service OK"
-sudo systemctl start concourse-compose.service
-sleep 5
-echo "concourse-compose.service OK"
+#sudo systemctl start concourse-compose.service
+#sleep 5
+#echo "concourse-compose.service OK"
 #sudo systemctl start portainer-compose.service
 #sleep 5
 #echo "portainer-compose.service OK" 
@@ -187,13 +187,13 @@ sudo mv ./fly /usr/local/bin/
 
 echo "===================== FLY Login =========================="
 
-/usr/local/bin/fly -t tutorial login -c http://localhost:8080 -u test -p test
+#/usr/local/bin/fly -t tutorial login -c http://localhost:8080 -u test -p test
 
 echo "===================== Kurulum tamamlandı =========================="
 
 SERVER_IP=$(ip -4 addr show eth1 | awk '/inet /{print $2}' | cut -d/ -f1)
 
-echo "http://${SERVER_IP}:8080/ --> concourseci"
+#echo "http://${SERVER_IP}:8080/ --> concourseci"
 echo "https://${SERVER_IP}:8443/ --> rancherui"
 
 sleep 30
