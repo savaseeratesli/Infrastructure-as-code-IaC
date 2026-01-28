@@ -82,7 +82,6 @@ sudo dnf install -y \
   net-tools \
   nmap \
   openssh-server \
-  openssl \
   net-tools \
   nmap \
   epel-release \
