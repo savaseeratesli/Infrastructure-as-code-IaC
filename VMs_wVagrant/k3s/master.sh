@@ -82,11 +82,11 @@ sudo dnf install -y \
   nmap \
   openssh-server \
   net-tools \
-  htop \
   nmap \
-  fail2ban \
-  git \
-  openssl
+  epel-release \
+  sshpass \
+  openssl \
+  git
   
 echo "===================== K3S kurulumu =========================="
 
