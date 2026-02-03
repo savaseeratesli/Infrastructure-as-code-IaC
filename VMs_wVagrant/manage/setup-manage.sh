@@ -170,9 +170,9 @@ echo "===================== Servisler Start yapılıyor ========================
 #sudo systemctl start iptables-modules.service
 #sleep 5
 #echo "iptables-modules.service OK"
-#sudo systemctl start concourse-compose.service
-#sleep 5
-#echo "concourse-compose.service OK"
+sudo systemctl start concourse-compose.service
+sleep 5
+echo "concourse-compose.service OK"
 #sudo systemctl start portainer-compose.service
 #sleep 5
 #echo "portainer-compose.service OK" 
@@ -182,24 +182,24 @@ echo "rancherui-compose.service OK"
 
 echo "===================== Concourse FLY Kuruluyor =========================="
 
-#curl 'http://localhost:8080/api/v1/cli?arch=amd64&platform=linux' -o fly
-#sudo chmod +x ./fly
-#sudo mv ./fly /usr/local/bin/
+curl 'http://localhost:8080/api/v1/cli?arch=amd64&platform=linux' -o fly
+sudo chmod +x ./fly
+sudo mv ./fly /usr/local/bin/
 
-## Root PATH fix 
-#if ! grep -q "/usr/local/bin" /root/.bashrc; then
-#  echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
-#fi
+# Root PATH fix 
+if ! grep -q "/usr/local/bin" /root/.bashrc; then
+  echo 'export PATH=$PATH:/usr/local/bin' >> /root/.bashrc
+fi
 
 echo "===================== FLY Login =========================="
 
-#/usr/local/bin/fly -t tutorial login -c http://localhost:8080 -u test -p test
+/usr/local/bin/fly -t tutorial login -c http://localhost:8080 -u test -p test
 
 echo "===================== Uygulamaların Çalışması Bekleniyor =========================="
 
 SERVER_IP=$(ip -4 addr show eth1 | awk '/inet /{print $2}' | cut -d/ -f1)
 
-#echo "http://${SERVER_IP}:8080/ --> concourseci"
+echo "http://${SERVER_IP}:8080/ --> concourseci"
 #echo "==============================================="
 #echo "https://${SERVER_IP}:9443/ --> portainerio"
 #echo "==============================================="
